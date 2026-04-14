@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Для Анджелины с любовью</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #fff0f6;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+
+        .cursive {
+            font-family: 'Caveat', cursive;
+        }
+
+        /* Анимация поднимающихся элементов */
+        .rising-element {
+            position: fixed;
+            bottom: -50px;
+            pointer-events: none;
+            z-index: 50;
+            animation: riseUp 4s linear forwards;
+        }
+
+        @keyframes riseUp {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-110vh) translateX(var(--random-x)) rotate(var(--random-rotate));
+                opacity: 0;
+            }
+        }
+
+        .cat-button {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .cat-button:hover {
+            transform: scale(1.1);
+        }
+
+        .message-card {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.8s ease-in-out;
+        }
+
+        .message-card.active {
+            max-height: 1000px;
+            opacity: 1;
+            margin-top: 2rem;
+        }
+
+        .bg-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 10c0-5 5-5 5 0 0 5-5 10-5 10s-5-5-5-10c0-5 5-5 5 0z' fill='%23ffccd5' fill-opacity='0.4'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="bg-pattern min-h-screen flex flex-col items-center justify-start p-4 pt-12">
+
+    <div class="max-w-md w-full text-center bg-white/90 backdrop-blur-md p-8 rounded-3xl shadow-2xl border-4 border-pink-200 relative z-20 mb-12">
+        <h1 class="text-4xl text-pink-600 mb-6 cursive">Привет, Анджелина! ✨</h1>
+        
+        <div id="initial-content">
+            <p class="text-lg text-gray-600 mb-8">Нажмите на кнопку, чтобы увидеть нечто особенное.!</p>
+            <button onclick="revealSurprise(event)" class="cat-button bg-pink-500 hover:bg-pink-600 text-white font-bold py-4 px-10 rounded-full shadow-lg text-xl flex items-center justify-center gap-3 mx-auto">
+                <span>Сюрприз для тебя!</span>
+                <span class="text-2xl">🐾</span>
+            </button>
+        </div>
+
+        <div id="message-container" class="message-card text-center">
+            <h2 class="text-3xl text-pink-500 mb-4 cursive" id="main-message"></h2>
+            <p class="text-gray-700 text-lg leading-relaxed italic mb-6" id="sub-message"></p>
+            <div class="flex justify-center gap-2 text-2xl">
+                <span>💖</span><span>🐾</span><span>💖</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Контейнер для частиц -->
+    <div id="particles-container"></div>
+
+    <script>
+        const surprises = [
+            {
+                main: "Анджелина, ты особенная!",
+                sub: "Ты самый прекрасный человек в мире! ✨"
+            },
+            {
+                main: "Ты сияешь, Анджелина!",
+                sub: "Твоя улыбка освещает всё вокруг. Надеюсь, эти котики заставят тебя улыбнуться сегодня! 🐾"
+            },
+            {
+                main: "Комплимент дня!",
+                sub: "Анджелина, ты умная, добрая и невероятно талантливая. Оставайся собой! 💖"
+            },
+            {
+                main: "Настоящая нежность!",
+                sub: "Мир становится лучше благодаря тебе. Вот твоя порция мимимишности! 🍭"
+            }
+        ];
+
+        function createRisingElement() {
+            const container = document.getElementById('particles-container');
+            const element = document.createElement('div');
+            const items = ['❤️', '💖', '💝', '💕', '🐱', '😸', '🐾', '😽', '😻'];
+            
+            element.innerHTML = items[Math.floor(Math.random() * items.length)];
+            element.className = 'rising-element text-3xl md:text-4xl';
+            
+            const startX = Math.random() * 100;
+            element.style.left = startX + 'vw';
+            
+            const randomX = (Math.random() - 0.5) * 400;
+            const randomRotate = (Math.random() - 0.5) * 1000;
+            element.style.setProperty('--random-x', randomX + 'px');
+            element.style.setProperty('--random-rotate', randomRotate + 'deg');
+            
+            element.style.animationDuration = (Math.random() * 2 + 2.5) + 's';
+            
+            container.appendChild(element);
+            setTimeout(() => element.remove(), 4000);
+        }
+
+        function revealSurprise(event) {
+            const container = document.getElementById('message-container');
+            const mainMsg = document.getElementById('main-message');
+            const subMsg = document.getElementById('sub-message');
+
+            const data = surprises[Math.floor(Math.random() * surprises.length)];
+            mainMsg.innerText = data.main;
+            subMsg.innerText = data.sub;
+
+            container.classList.remove('active');
+            void container.offsetWidth; 
+            container.classList.add('active');
+
+            let count = 0;
+            const interval = setInterval(() => {
+                createRisingElement();
+                count++;
+                if (count > 60) clearInterval(interval);
+            }, 80);
+
+            setTimeout(() => {
+                container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
+        }
+
+        setInterval(() => {
+            if (Math.random() > 0.8) createRisingElement();
+        }, 1500);
+    </script>
+</body>
+</html>
